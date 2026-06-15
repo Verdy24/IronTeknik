@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aplikasi Surat Penawaran Barang</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <main class="app-layout">
+        <section class="panel input-panel no-print">
+            <div class="panel-header">
+                <div class="input-header">
+                    <div>
+                        <h1>Surat Penawaran .PDF</h1>
+                        <hr>
+                        <p>Aplikasi ini di buat dan diperuntukan untuk Internal Iron Teknik. </p>
+                    </div>
+
+                    <img src="./assets/Logo_Iron_Teknik.png" alt="Logo Iron Teknik" class="input-logo">
+                </div>
+            </div>
+
+            <form id="itemForm" class="item-form">
+                <div class="form-group full">
+                    <label for="itemName">Nama Barang</label>
+                    <textarea id="itemName" rows="3" placeholder="Contoh: REWINDING MOTOR FAN 220 V 1400 RPM" required></textarea>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="quantity">Jumlah</label>
+                        <input id="quantity" type="number" min="1" step="1" value="1" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="unit">Satuan</label>
+                        <input id="unit" type="text" value="" placeholder="Contoh: UNIT / PCS" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="unitPrice">Harga Satuan</label>
+                        <input id="unitPrice" type="text" inputmode="numeric" placeholder="Contoh : 25.000" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="servicePrice">Harga Jasa per Item <span>opsional</span></label>
+                        <input id="servicePrice" type="text" inputmode="numeric" placeholder="Contoh: 25.000" />
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button type="submit" class="btn primary">Tambah Barang</button>
+                    <button type="button" id="resetFormBtn" class="btn light">Reset Input</button>
+                </div>
+            </form>
+
+            <div class="items-card">
+                <div class="items-card-title">
+                    <h2>Data Barang</h2>
+                    <button type="button" id="clearAllBtn" class="btn danger small">Hapus Semua</button>
+                </div>
+                <div id="itemList" class="item-list empty-state">
+                    Belum ada barang yang ditambahkan.
+                </div>
+            </div>
+
+            <div class="button-row sticky-actions">
+                <button type="button" id="printBtn" class="btn success">Cetak / Simpan PDF</button>
+            </div>
+        </section>
+
+        <section class="paper-wrapper">
+            <article id="offerLetter" class="paper">
+                <p class="date-line" id="currentDate">Tangerang, -</p>
+
+                <p>Kepada Yth.</p>
+                <p>
+                    PT. COMETA CAN<br />
+                    Jalan Telesonic Ujung KM.8 No. 5<br />
+                    Pasir Jaya, Jati Uwung<br />
+                    Kota Tangerang, Banten 15135
+                </p>
+
+                <p class="subject"><strong>Perihal: Penawaran Harga Jasa Gulung dan Servis Dinamo</strong></p>
+
+                <p>Dengan hormat,</p>
+                <p>
+                    Sehubungan dengan kebutuhan jasa servis dan gulung dinamo, bersama ini kami sampaikan
+                    penawaran harga dengan rincian sebagai berikut:
+                </p>
+
+                <table class="offer-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Barang</th>
+                            <th>Jumlah</th>
+                            <th>Unit</th>
+                            <th>Harga Satuan (Rp)</th>
+                            <th>Jumlah (Rp)</th>
+                            <th class="no-print action-col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="letterTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-table">Belum ada data barang.</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="total-label">Jumlah</td>
+                            <td class="total-value" id="grandTotal">0</td>
+                            <td class="no-print action-col"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="note-section">
+                    <p><strong>Note:</strong></p>
+                    <p>* Harga belum termasuk pajak (PPN 11%).</p>
+                    <p>* Pembayaran dilakukan melalui transfer bank BCA <strong>no rek 7130 9908 64</strong> atas nama Heri Widodo.</p>
+                </div>
+
+                <p>
+                    Demikian penawaran ini kami sampaikan. Kami berharap dapat menjalin kerja sama yang baik
+                    dengan perusahaan Anda. Atas perhatian dan kepercayaannya, kami ucapkan terima kasih.
+                </p>
+
+                <div class="signature">
+                    <p>Hormat kami,</p>
+                    <p><strong>IRON TEKNIK</strong></p>
+                    <br /><br />
+                    <p>Heri Widodo</p>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
