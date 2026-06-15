@@ -148,7 +148,7 @@ function renderLetterTable() {
 
         const hasService = item.servicePrice > 0;
         const nameLines = hasService
-            ? `<div class="main-name">${formatMultilineText(item.name)}</div><div class="service-name">JASA PEKERJAAN</div>`
+            ? `<div class="main-name">${formatMultilineText(item.name)}</div><div class="service-name">JASA PENGERJAAN</div>`
             : `<div class="main-name">${formatMultilineText(item.name)}</div>`;
         const priceLines = hasService
             ? `<span class="money-line">${formatCurrency(item.unitPrice)}</span><span class="money-line service-money">${formatCurrency(item.servicePrice)}</span>`
@@ -377,7 +377,7 @@ function buildOfferLetterPdf(dataItems, dateText) {
 
         if (hasService) {
             nameY -= 7;
-            page.text("JASA PEKERJAAN", columnX[1] + 7, nameY, 9.3);
+            page.text("JASA PENGERJAAN", columnX[1] + 7, nameY, 9.3);
         }
 
         const itemSubtotal = item.quantity * item.unitPrice;
