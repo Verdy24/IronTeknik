@@ -1,18 +1,40 @@
 const STORAGE_KEY = "offer-letter-items-v1";
 const RECIPIENT_STORAGE_KEY = "offer-letter-recipient-v1";
+const LETTER_INFO_STORAGE_KEY = "offer-letter-info-v1";
+
 const DEFAULT_RECIPIENT = {
     name: "PT. COMETA CAN",
     address: "Jalan Telesonic Ujung KM.8 No. 5\nPasir Jaya, Jati Uwung\nKota Tangerang, Banten 15135"
 };
 
+const DEFAULT_LETTER_INFO = {
+    bankName: "BCA",
+    accountNumber: "7130 9908 64",
+    accountHolder: "Heri Widodo",
+    ownerName: "Heri Widodo"
+};
+
 let items = loadItems();
 let recipient = loadRecipient();
+let letterInfo = loadLetterInfo();
 
 const itemForm = document.getElementById("itemForm");
+
 const recipientNameInput = document.getElementById("recipientName");
 const recipientAddressInput = document.getElementById("recipientAddress");
 const recipientNamePreview = document.getElementById("recipientNamePreview");
 const recipientAddressPreview = document.getElementById("recipientAddressPreview");
+
+const bankNameInput = document.getElementById("bankName");
+const accountNumberInput = document.getElementById("accountNumber");
+const accountHolderInput = document.getElementById("accountHolder");
+const ownerNameInput = document.getElementById("ownerName");
+
+const bankNamePreview = document.getElementById("bankNamePreview");
+const accountNumberPreview = document.getElementById("accountNumberPreview");
+const accountHolderPreview = document.getElementById("accountHolderPreview");
+const ownerNamePreview = document.getElementById("ownerNamePreview");
+
 const itemNameInput = document.getElementById("itemName");
 const quantityInput = document.getElementById("quantity");
 const unitInput = document.getElementById("unit");
@@ -30,8 +52,15 @@ init();
 
 function init() {
     currentDateEl.textContent = `Tangerang, ${formatDateIndonesia(new Date())}`;
+
     recipientNameInput.value = recipient.name;
     recipientAddressInput.value = recipient.address;
+
+    bankNameInput.value = letterInfo.bankName;
+    accountNumberInput.value = letterInfo.accountNumber;
+    accountHolderInput.value = letterInfo.accountHolder;
+    ownerNameInput.value = letterInfo.ownerName;
+
     renderAll();
     attachEvents();
 }
@@ -46,8 +75,10 @@ function attachEvents() {
 
     clearAllBtn.addEventListener("click", function () {
         if (!items.length) return;
+
         const ok = confirm("Hapus semua data barang?");
         if (!ok) return;
+
         items = [];
         saveItems();
         renderAll();
@@ -57,6 +88,10 @@ function attachEvents() {
 
     [recipientNameInput, recipientAddressInput].forEach(input => {
         input.addEventListener("input", updateRecipient);
+    });
+
+    [bankNameInput, accountNumberInput, accountHolderInput, ownerNameInput].forEach(input => {
+        input.addEventListener("input", updateLetterInfo);
     });
 
     [unitPriceInput, servicePriceInput].forEach(input => {
@@ -77,7 +112,7 @@ function downloadPdf() {
 
     try {
         const fileName = `surat-penawaran-${formatDateFile(new Date())}.pdf`;
-        const pdfBytes = buildOfferLetterPdf(items, currentDateEl.textContent, recipient);
+        const pdfBytes = buildOfferLetterPdf(items, currentDateEl.textContent, recipient, letterInfo);
         downloadBlob(pdfBytes, fileName, "application/pdf");
     } catch (error) {
         console.error(error);
@@ -138,6 +173,7 @@ function resetForm() {
 
 function renderAll() {
     renderRecipientPreview();
+    renderLetterInfoPreview();
     renderLetterTable();
     renderItemList();
 }
@@ -155,6 +191,25 @@ function updateRecipient() {
 function renderRecipientPreview() {
     recipientNamePreview.textContent = recipient.name;
     recipientAddressPreview.innerHTML = formatMultilineText(recipient.address);
+}
+
+function updateLetterInfo() {
+    letterInfo = {
+        bankName: bankNameInput.value.trim() || DEFAULT_LETTER_INFO.bankName,
+        accountNumber: accountNumberInput.value.trim() || DEFAULT_LETTER_INFO.accountNumber,
+        accountHolder: accountHolderInput.value.trim() || DEFAULT_LETTER_INFO.accountHolder,
+        ownerName: ownerNameInput.value.trim() || DEFAULT_LETTER_INFO.ownerName
+    };
+
+    saveLetterInfo();
+    renderLetterInfoPreview();
+}
+
+function renderLetterInfoPreview() {
+    bankNamePreview.textContent = letterInfo.bankName;
+    accountNumberPreview.textContent = letterInfo.accountNumber;
+    accountHolderPreview.textContent = letterInfo.accountHolder;
+    ownerNamePreview.textContent = letterInfo.ownerName;
 }
 
 function renderLetterTable() {
@@ -179,17 +234,21 @@ function renderLetterTable() {
         grandTotal += rowTotal;
 
         const hasService = item.servicePrice > 0;
+
         const nameLines = hasService
             ? `<div class="main-name">${formatMultilineText(item.name)}</div><div class="service-name">JASA PENGERJAAN</div>`
             : `<div class="main-name">${formatMultilineText(item.name)}</div>`;
+
         const priceLines = hasService
             ? `<span class="money-line">${formatCurrency(item.unitPrice)}</span><span class="money-line service-money">${formatCurrency(item.servicePrice)}</span>`
             : `<span class="money-line">${formatCurrency(item.unitPrice)}</span>`;
+
         const amountLines = hasService
             ? `<span class="money-line">${formatCurrency(itemSubtotal)}</span><span class="money-line service-money">${formatCurrency(serviceSubtotal)}</span>`
             : `<span class="money-line">${formatCurrency(itemSubtotal)}</span>`;
 
         const tr = document.createElement("tr");
+
         tr.innerHTML = `
             <td>${index + 1}</td>
             <td class="name-cell">${nameLines}</td>
@@ -201,6 +260,7 @@ function renderLetterTable() {
                 <button type="button" class="table-action" onclick="deleteItem('${item.id}')">Hapus</button>
             </td>
         `;
+
         letterTableBody.appendChild(tr);
     });
 
@@ -225,6 +285,7 @@ function renderItemList() {
 
         const div = document.createElement("div");
         div.className = "item-preview";
+
         div.innerHTML = `
             <strong>${index + 1}. ${escapeHtml(item.name)}</strong>
             <small>Jumlah: ${item.quantity} ${escapeHtml(item.unit)}</small>
@@ -232,6 +293,7 @@ function renderItemList() {
             <small>Harga jasa: ${formatCurrency(item.servicePrice)} x ${item.quantity} = ${formatCurrency(serviceSubtotal)}</small>
             <small><strong>Total: ${formatCurrency(total)}</strong></small>
         `;
+
         itemListEl.appendChild(div);
     });
 }
@@ -298,6 +360,10 @@ function saveRecipient() {
     localStorage.setItem(RECIPIENT_STORAGE_KEY, JSON.stringify(recipient));
 }
 
+function saveLetterInfo() {
+    localStorage.setItem(LETTER_INFO_STORAGE_KEY, JSON.stringify(letterInfo));
+}
+
 function loadItems() {
     try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -309,6 +375,7 @@ function loadItems() {
 function loadRecipient() {
     try {
         const savedRecipient = JSON.parse(localStorage.getItem(RECIPIENT_STORAGE_KEY));
+
         return {
             name: savedRecipient?.name || DEFAULT_RECIPIENT.name,
             address: savedRecipient?.address || DEFAULT_RECIPIENT.address
@@ -318,7 +385,24 @@ function loadRecipient() {
     }
 }
 
-function buildOfferLetterPdf(dataItems, dateText, recipientData) {
+function loadLetterInfo() {
+    try {
+        const savedInfo = JSON.parse(localStorage.getItem(LETTER_INFO_STORAGE_KEY));
+
+        return {
+            bankName: savedInfo?.bankName || DEFAULT_LETTER_INFO.bankName,
+            accountNumber: savedInfo?.accountNumber || DEFAULT_LETTER_INFO.accountNumber,
+            accountHolder: savedInfo?.accountHolder || DEFAULT_LETTER_INFO.accountHolder,
+            ownerName: savedInfo?.ownerName || DEFAULT_LETTER_INFO.ownerName
+        };
+    } catch {
+        return { ...DEFAULT_LETTER_INFO };
+    }
+}
+
+function buildOfferLetterPdf(dataItems, dateText, recipientData, letterInfoData) {
+    letterInfoData = letterInfoData || DEFAULT_LETTER_INFO;
+
     const pageWidth = 595.28;
     const pageHeight = 841.89;
     const marginLeft = mmToPt(20);
@@ -350,6 +434,7 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData) {
 
     function drawParagraph(text, x, maxWidth, size = 10.5, options = {}) {
         const lines = wrapPdfText(text, maxWidth, size);
+
         lines.forEach(line => {
             page.text(line, x, y, size, options);
             y -= options.lineHeight || size * 1.45;
@@ -365,18 +450,22 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData) {
 
         const addressLines = wrapPdfText(recipientData.address, tableWidth, 10.5);
         addressLines.forEach(line => drawTextLine(line, marginLeft, 10.5));
+
         y -= 7;
 
         drawTextLine("Perihal: Penawaran Harga Jasa Gulung dan Servis Dinamo", marginLeft, 10.5, { bold: true });
+
         y -= 7;
 
         drawTextLine("Dengan hormat,", marginLeft, 10.5);
+
         drawParagraph(
             "Sehubungan dengan kebutuhan jasa servis dan gulung dinamo, bersama ini kami sampaikan penawaran harga dengan rincian sebagai berikut:",
             marginLeft,
             tableWidth,
             10.5
         );
+
         y -= 8;
     }
 
@@ -391,6 +480,7 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData) {
         columnX.forEach(x => page.line(x, top, x, bottom, 0.7));
 
         const headers = ["No", "Nama Barang", "Jumlah", "Unit", "Harga Satuan (Rp)", "Jumlah (Rp)"];
+
         headers.forEach((header, index) => {
             const centerX = columnX[index] + columns[index] / 2;
             page.text(header, centerX, top - 15, 8.5, { bold: true, align: "center" });
@@ -410,14 +500,17 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData) {
 
         page.line(marginLeft, top, marginLeft + tableWidth, top, 0.6);
         page.line(marginLeft, bottom, marginLeft + tableWidth, bottom, 0.6);
+
         columnX.forEach(x => page.line(x, top, x, bottom, 0.6));
 
         const midY = top - rowHeight / 2 - 3;
+
         page.text(String(index + 1), columnX[0] + columns[0] / 2, midY, 9.5, { align: "center" });
         page.text(String(item.quantity), columnX[2] + columns[2] / 2, midY, 9.5, { align: "center" });
         page.text(String(item.unit).toUpperCase(), columnX[3] + columns[3] / 2, midY, 9.5, { align: "center" });
 
         let nameY = top - 14;
+
         nameLines.forEach(line => {
             page.text(line, columnX[1] + 7, nameY, 9.3);
             nameY -= 12;
@@ -430,7 +523,9 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData) {
 
         const itemSubtotal = item.quantity * item.unitPrice;
         const serviceSubtotal = item.quantity * item.servicePrice;
+
         let priceY = top - 14;
+
         page.text(formatCurrency(item.unitPrice), columnX[5] - 7, priceY, 9.3, { align: "right" });
         page.text(formatCurrency(itemSubtotal), columnX[6] - 7, priceY, 9.3, { align: "right" });
 
@@ -466,12 +561,19 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData) {
         drawTextLine("Note:", marginLeft, 10.5, { bold: true });
         drawTextLine("* Harga belum termasuk pajak (PPN 11%).", marginLeft, 10.5);
 
-        const notePrefix = "* Pembayaran dilakukan melalui transfer bank BCA ";
-        const rekText = "no rek 7130 9908 64";
-        const noteSuffix = " atas nama Heri Widodo.";
+        const notePrefix = `* Pembayaran dilakukan melalui transfer bank ${letterInfoData.bankName} `;
+        const rekText = `no rek ${letterInfoData.accountNumber}`;
+        const noteSuffix = ` atas nama ${letterInfoData.accountHolder}.`;
+
         page.text(notePrefix, marginLeft, y, 10.5);
         page.text(rekText, marginLeft + estimatePdfTextWidth(notePrefix, 10.5), y, 10.5, { bold: true });
-        page.text(noteSuffix, marginLeft + estimatePdfTextWidth(notePrefix, 10.5) + estimatePdfTextWidth(rekText, 10.5, true) + 4, y, 10.5);
+        page.text(
+            noteSuffix,
+            marginLeft + estimatePdfTextWidth(notePrefix, 10.5) + estimatePdfTextWidth(rekText, 10.5, true) + 4,
+            y,
+            10.5
+        );
+
         y -= 24;
 
         drawParagraph(
@@ -480,12 +582,15 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData) {
             tableWidth,
             10.5
         );
+
         y -= 18;
 
         drawTextLine("Hormat kami,", marginLeft, 10.5);
         drawTextLine("IRON TEKNIK", marginLeft, 10.5, { bold: true });
+
         y -= 40;
-        drawTextLine("Heri Widodo", marginLeft, 10.5);
+
+        drawTextLine(letterInfoData.ownerName, marginLeft, 10.5);
     }
 
     drawAddressBlock();
@@ -582,6 +687,7 @@ function createPdfFile(pageStreams, pageWidth, pageHeight) {
     });
 
     const xrefOffset = asciiByteLength(pdf);
+
     pdf += `xref\n0 ${objects.length + 1}\n`;
     pdf += "0000000000 65535 f \n";
 
@@ -601,6 +707,7 @@ function downloadBlob(bytes, fileName, mimeType) {
 
     link.href = url;
     link.download = fileName;
+
     document.body.appendChild(link);
     link.click();
     link.remove();
