@@ -1,8 +1,18 @@
 const STORAGE_KEY = "offer-letter-items-v1";
+const RECIPIENT_STORAGE_KEY = "offer-letter-recipient-v1";
+const DEFAULT_RECIPIENT = {
+    name: "PT. COMETA CAN",
+    address: "Jalan Telesonic Ujung KM.8 No. 5\nPasir Jaya, Jati Uwung\nKota Tangerang, Banten 15135"
+};
 
 let items = loadItems();
+let recipient = loadRecipient();
 
 const itemForm = document.getElementById("itemForm");
+const recipientNameInput = document.getElementById("recipientName");
+const recipientAddressInput = document.getElementById("recipientAddress");
+const recipientNamePreview = document.getElementById("recipientNamePreview");
+const recipientAddressPreview = document.getElementById("recipientAddressPreview");
 const itemNameInput = document.getElementById("itemName");
 const quantityInput = document.getElementById("quantity");
 const unitInput = document.getElementById("unit");
@@ -20,6 +30,8 @@ init();
 
 function init() {
     currentDateEl.textContent = `Tangerang, ${formatDateIndonesia(new Date())}`;
+    recipientNameInput.value = recipient.name;
+    recipientAddressInput.value = recipient.address;
     renderAll();
     attachEvents();
 }
@@ -43,6 +55,10 @@ function attachEvents() {
 
     printBtn.addEventListener("click", downloadPdf);
 
+    [recipientNameInput, recipientAddressInput].forEach(input => {
+        input.addEventListener("input", updateRecipient);
+    });
+
     [unitPriceInput, servicePriceInput].forEach(input => {
         input.addEventListener("input", function () {
             input.value = formatNumberInput(input.value);
@@ -61,7 +77,7 @@ function downloadPdf() {
 
     try {
         const fileName = `surat-penawaran-${formatDateFile(new Date())}.pdf`;
-        const pdfBytes = buildOfferLetterPdf(items, currentDateEl.textContent);
+        const pdfBytes = buildOfferLetterPdf(items, currentDateEl.textContent, recipient);
         downloadBlob(pdfBytes, fileName, "application/pdf");
     } catch (error) {
         console.error(error);
@@ -121,8 +137,24 @@ function resetForm() {
 }
 
 function renderAll() {
+    renderRecipientPreview();
     renderLetterTable();
     renderItemList();
+}
+
+function updateRecipient() {
+    recipient = {
+        name: recipientNameInput.value.trim() || DEFAULT_RECIPIENT.name,
+        address: recipientAddressInput.value.trim() || DEFAULT_RECIPIENT.address
+    };
+
+    saveRecipient();
+    renderRecipientPreview();
+}
+
+function renderRecipientPreview() {
+    recipientNamePreview.textContent = recipient.name;
+    recipientAddressPreview.innerHTML = formatMultilineText(recipient.address);
 }
 
 function renderLetterTable() {
@@ -262,6 +294,10 @@ function saveItems() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
 
+function saveRecipient() {
+    localStorage.setItem(RECIPIENT_STORAGE_KEY, JSON.stringify(recipient));
+}
+
 function loadItems() {
     try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -270,7 +306,19 @@ function loadItems() {
     }
 }
 
-function buildOfferLetterPdf(dataItems, dateText) {
+function loadRecipient() {
+    try {
+        const savedRecipient = JSON.parse(localStorage.getItem(RECIPIENT_STORAGE_KEY));
+        return {
+            name: savedRecipient?.name || DEFAULT_RECIPIENT.name,
+            address: savedRecipient?.address || DEFAULT_RECIPIENT.address
+        };
+    } catch {
+        return { ...DEFAULT_RECIPIENT };
+    }
+}
+
+function buildOfferLetterPdf(dataItems, dateText, recipientData) {
     const pageWidth = 595.28;
     const pageHeight = 841.89;
     const marginLeft = mmToPt(20);
@@ -313,10 +361,10 @@ function buildOfferLetterPdf(dataItems, dateText) {
         y -= 25;
 
         drawTextLine("Kepada Yth.", marginLeft, 10.5);
-        drawTextLine("PT. COMETA CAN", marginLeft, 10.5);
-        drawTextLine("Jalan Telesonic Ujung KM.8 No. 5", marginLeft, 10.5);
-        drawTextLine("Pasir Jaya, Jati Uwung", marginLeft, 10.5);
-        drawTextLine("Kota Tangerang, Banten 15135", marginLeft, 10.5);
+        drawTextLine(recipientData.name, marginLeft, 10.5);
+
+        const addressLines = wrapPdfText(recipientData.address, tableWidth, 10.5);
+        addressLines.forEach(line => drawTextLine(line, marginLeft, 10.5));
         y -= 7;
 
         drawTextLine("Perihal: Penawaran Harga Jasa Gulung dan Servis Dinamo", marginLeft, 10.5, { bold: true });

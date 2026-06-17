@@ -21,6 +21,20 @@
                 </div>
             </div>
 
+            <div class="recipient-card">
+                <h2>Data Tujuan Surat</h2>
+                <div class="form-group full">
+                    <label for="recipientName">Nama PT</label>
+                    <input id="recipientName" type="text" value="PT. COMETA CAN" placeholder="Contoh: PT. COMETA CAN" required />
+                </div>
+                <div class="form-group full">
+                    <label for="recipientAddress">Alamat</label>
+                    <textarea id="recipientAddress" rows="4" placeholder="Contoh: Jalan Telesonic Ujung KM.8 No. 5&#10;Pasir Jaya, Jati Uwung&#10;Kota Tangerang, Banten 15135" required>Jalan Telesonic Ujung KM.8 No. 5
+Pasir Jaya, Jati Uwung
+Kota Tangerang, Banten 15135</textarea>
+                </div>
+            </div>
+
             <form id="itemForm" class="item-form">
                 <div class="form-group full">
                     <label for="itemName">Nama Barang</label>
@@ -75,11 +89,9 @@
                 <p class="date-line" id="currentDate">Tangerang, -</p>
 
                 <p>Kepada Yth.</p>
-                <p>
-                    PT. COMETA CAN<br />
-                    Jalan Telesonic Ujung KM.8 No. 5<br />
-                    Pasir Jaya, Jati Uwung<br />
-                    Kota Tangerang, Banten 15135
+                <p id="recipientBlock">
+                    <span id="recipientNamePreview">PT. COMETA CAN</span><br />
+                    <span id="recipientAddressPreview">Jalan Telesonic Ujung KM.8 No. 5<br />Pasir Jaya, Jati Uwung<br />Kota Tangerang, Banten 15135</span>
                 </p>
 
                 <p class="subject"><strong>Perihal: Penawaran Harga Jasa Gulung dan Servis Dinamo</strong></p>
