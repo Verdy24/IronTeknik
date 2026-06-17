@@ -8,81 +8,113 @@
 </head>
 <body>
     <main class="app-layout">
-        <section class="panel input-panel no-print">
-            <div class="panel-header">
-                <div class="input-header">
-                    <div>
-                        <h1>Surat Penawaran .PDF</h1>
-                        <hr>
-                        <p>Aplikasi ini di buat dan diperuntukan untuk Internal Iron Teknik. </p>
-                    </div>
-
-                    <img src="./assets/Logo_Iron_Teknik.png" alt="Logo Iron Teknik" class="input-logo">
-                </div>
+<section class="panel input-panel no-print">
+    <div class="panel-header">
+        <div class="input-header">
+            <div>
+                <h1>Surat Penawaran .PDF</h1>
+                <hr>
+                <p>Aplikasi ini di buat dan diperuntukan untuk Internal Iron Teknik. </p>
             </div>
 
-            <div class="recipient-card">
-                <h2>Data Tujuan Surat</h2>
-                <div class="form-group full">
-                    <label for="recipientName">Nama PT</label>
-                    <input id="recipientName" type="text" value="PT. COMETA CAN" placeholder="Contoh: PT. COMETA CAN" required />
-                </div>
-                <div class="form-group full">
-                    <label for="recipientAddress">Alamat</label>
-                    <textarea id="recipientAddress" rows="4" placeholder="Contoh: Jalan Telesonic Ujung KM.8 No. 5&#10;Pasir Jaya, Jati Uwung&#10;Kota Tangerang, Banten 15135" required>Jalan Telesonic Ujung KM.8 No. 5
+            <img src="./assets/Logo_Iron_Teknik.png" alt="Logo Iron Teknik" class="input-logo">
+        </div>
+    </div>
+
+    <!-- CARD DATA SURAT -->
+    <div class="input-card">
+        <h2>Data Surat</h2>
+
+        <div class="form-group">
+            <label for="recipientName">Nama PT / Penerima</label>
+            <input id="recipientName" type="text" value="PT. COMETA CAN" placeholder="Contoh: PT. COMETA CAN" />
+        </div>
+
+        <div class="form-group">
+            <label for="recipientAddress">Alamat Penerima</label>
+            <textarea id="recipientAddress" rows="4" placeholder="Contoh: Jalan Telesonic Ujung KM.8 No. 5">Jalan Telesonic Ujung KM.8 No. 5
 Pasir Jaya, Jati Uwung
 Kota Tangerang, Banten 15135</textarea>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="bankName">Jenis Bank</label>
+                <input id="bankName" type="text" value="BCA" placeholder="Contoh: BCA" />
+            </div>
+
+            <div class="form-group">
+                <label for="accountNumber">No Rekening</label>
+                <input id="accountNumber" type="text" value="7130 9908 64" placeholder="Contoh: 7130 9908 64" />
+            </div>
+
+            <div class="form-group">
+                <label for="accountHolder">Nama Rekening</label>
+                <input id="accountHolder" type="text" value="Heri Widodo" placeholder="Contoh: Heri Widodo" />
+            </div>
+
+            <div class="form-group">
+                <label for="ownerName">Nama Pemilik</label>
+                <input id="ownerName" type="text" value="Heri Widodo" placeholder="Contoh: Heri Widodo" />
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD INPUT BARANG -->
+    <div class="input-card">
+        <h2>Input Barang</h2>
+
+        <form id="itemForm" class="item-form">
+            <div class="form-group full">
+                <label for="itemName">Nama Barang</label>
+                <textarea id="itemName" rows="3" placeholder="Contoh: REWINDING MOTOR FAN 220 V 1400 RPM" required></textarea>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="quantity">Jumlah</label>
+                    <input id="quantity" type="number" min="1" step="1" value="1" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="unit">Satuan</label>
+                    <input id="unit" type="text" value="" placeholder="Contoh: UNIT / PCS" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="unitPrice">Harga Satuan</label>
+                    <input id="unitPrice" type="text" inputmode="numeric" placeholder="Contoh : 25.000" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="servicePrice">Harga Jasa per Item <span>opsional</span></label>
+                    <input id="servicePrice" type="text" inputmode="numeric" placeholder="Contoh: 25.000" />
                 </div>
             </div>
 
-            <form id="itemForm" class="item-form">
-                <div class="form-group full">
-                    <label for="itemName">Nama Barang</label>
-                    <textarea id="itemName" rows="3" placeholder="Contoh: REWINDING MOTOR FAN 220 V 1400 RPM" required></textarea>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="quantity">Jumlah</label>
-                        <input id="quantity" type="number" min="1" step="1" value="1" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="unit">Satuan</label>
-                        <input id="unit" type="text" value="" placeholder="Contoh: UNIT / PCS" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="unitPrice">Harga Satuan</label>
-                        <input id="unitPrice" type="text" inputmode="numeric" placeholder="Contoh : 25.000" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="servicePrice">Harga Jasa per Item <span>opsional</span></label>
-                        <input id="servicePrice" type="text" inputmode="numeric" placeholder="Contoh: 25.000" />
-                    </div>
-                </div>
-
-                <div class="button-row">
-                    <button type="submit" class="btn primary">Tambah Barang</button>
-                    <button type="button" id="resetFormBtn" class="btn light">Reset Input</button>
-                </div>
-            </form>
-
-            <div class="items-card">
-                <div class="items-card-title">
-                    <h2>Data Barang</h2>
-                    <button type="button" id="clearAllBtn" class="btn danger small">Hapus Semua</button>
-                </div>
-                <div id="itemList" class="item-list empty-state">
-                    Belum ada barang yang ditambahkan.
-                </div>
+            <div class="button-row">
+                <button type="submit" class="btn primary">Tambah Barang</button>
+                <button type="button" id="resetFormBtn" class="btn light">Reset Input</button>
             </div>
+        </form>
+    </div>
 
-            <div class="button-row sticky-actions">
-                <button type="button" id="printBtn" class="btn success">Download PDF</button>
-            </div>
-        </section>
+    <!-- CARD DATA BARANG -->
+    <div class="input-card">
+        <div class="items-card-title">
+            <h2>Data Barang</h2>
+            <button type="button" id="clearAllBtn" class="btn danger small">Hapus Semua</button>
+        </div>
+
+        <div id="itemList" class="item-list empty-state">
+            Belum ada barang yang ditambahkan.
+        </div>
+    </div>
+
+    <div class="button-row sticky-actions">
+        <button type="button" id="printBtn" class="btn success">Download PDF</button>
+    </div>
+</section>
 
         <section class="paper-wrapper">
             <article id="offerLetter" class="paper">
@@ -131,7 +163,12 @@ Kota Tangerang, Banten 15135</textarea>
                 <div class="note-section">
                     <p><strong>Note:</strong></p>
                     <p>* Harga belum termasuk pajak (PPN 11%).</p>
-                    <p>* Pembayaran dilakukan melalui transfer bank BCA <strong>no rek 7130 9908 64</strong> atas nama Heri Widodo.</p>
+                    <p>
+                        * Pembayaran dilakukan melalui transfer bank
+                        <span id="bankNamePreview">BCA</span>
+                        <strong>no rek <span id="accountNumberPreview">7130 9908 64</span></strong>
+                        atas nama <span id="accountHolderPreview">Heri Widodo</span>.
+                    </p>
                 </div>
 
                 <p>
@@ -143,7 +180,7 @@ Kota Tangerang, Banten 15135</textarea>
                     <p>Hormat kami,</p>
                     <p><strong>IRON TEKNIK</strong></p>
                     <br /><br />
-                    <p>Heri Widodo</p>
+                    <p id="ownerNamePreview">Heri Widodo</p>
                 </div>
             </article>
         </section>
