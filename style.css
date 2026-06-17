@@ -87,9 +87,23 @@ body {
     object-fit: contain;
     flex-shrink: 0;
 }
+.recipient-card,
 .item-form {
     display: grid;
     gap: 14px;
+}
+
+.recipient-card {
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(251, 253, 255, 0.9);
+}
+
+.recipient-card h2 {
+    margin: 0;
+    font-size: 16px;
 }
 
 .form-grid {
