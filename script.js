@@ -416,7 +416,6 @@ function buildOfferLetterPdf(dataItems, dateText) {
 
     function drawFinalSection() {
         drawTextLine("Note:", marginLeft, 10.5, { bold: true });
-        drawTextLine("* Harga belum termasuk pajak (PPN 11%).", marginLeft, 10.5);
 
         const notePrefix = "* Pembayaran dilakukan melalui transfer bank BCA ";
         const rekText = "no rek 7130 9908 64";
