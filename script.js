@@ -559,11 +559,10 @@ function buildOfferLetterPdf(dataItems, dateText, recipientData, letterInfoData)
 
     function drawFinalSection() {
         drawTextLine("Note:", marginLeft, 10.5, { bold: true });
-        drawTextLine("* Harga belum termasuk pajak (PPN 11%).", marginLeft, 10.5);
 
         const notePrefix = `* Pembayaran dilakukan melalui transfer bank ${letterInfoData.bankName} `;
         const rekText = `no rek ${letterInfoData.accountNumber}`;
-        const noteSuffix = ` atas nama ${letterInfoData.accountHolder}.`;
+        const noteSuffix = `atas nama ${letterInfoData.accountHolder}.`;
 
         page.text(notePrefix, marginLeft, y, 10.5);
         page.text(rekText, marginLeft + estimatePdfTextWidth(notePrefix, 10.5), y, 10.5, { bold: true });
