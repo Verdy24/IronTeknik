@@ -1,50 +1,30 @@
-# Generator Surat Penawaran Barang
+# Iron Teknik Penawaran - Android
 
-Aplikasi web statis sederhana untuk membuat surat penawaran harga seperti template IRON TEKNIK.
+Aplikasi Android offline untuk membuat surat penawaran Iron Teknik tanpa membuka link atau membutuhkan koneksi internet.
+
+## Nama aplikasi
+
+**Iron Teknik Penawaran**
+
+Nama ini dipilih agar mudah ditemukan setelah instalasi dengan pencarian `Iron`, `Teknik`, atau `Penawaran` pada launcher Android.
 
 ## Fitur
 
-- Input nama barang
-- Input jumlah
-- Input satuan
-- Input harga satuan
-- Input harga jasa per item secara opsional
-- Harga jasa dihitung per jumlah item
-- Tanggal otomatis mengikuti tanggal hari ini
-- Total otomatis
-- Cetak atau simpan sebagai PDF melalui fitur print browser
-- Bisa deploy langsung ke GitHub Pages
+- Berjalan offline melalui WebView lokal.
+- Data Surat terpisah dari Input Barang dan Data Barang.
+- Default data lama tetap tersedia: PT. COMETA CAN, alamat, BCA, nomor rekening, serta Heri Widodo.
+- Data tersimpan lokal menggunakan `localStorage` WebView.
+- PDF dibuat offline dan disimpan ke `Download/Iron Teknik`.
+- Launcher icon khusus aplikasi surat penawaran.
+- Splash screen dengan logo Iron Teknik dan animasi fade/scale.
+- Tidak meminta akses internet.
 
-## Rumus Perhitungan
+## Build
 
-Jika item memiliki jasa:
+Project menggunakan Java 17, Android Gradle Plugin 8.7.3, Gradle 8.9, compileSdk/targetSdk 35 dan minSdk 29 (Android 10).
 
-```text
-Total per item = (Harga Satuan x Jumlah) + (Harga Jasa x Jumlah)
-```
+Buka root repository branch `apk` dengan Android Studio, lalu build APK dari menu **Build > Build APK(s)**.
 
-Contoh:
+## GitHub Actions
 
-```text
-Jumlah = 2
-Harga Satuan = 50.000
-Harga Jasa = 25.000
-Total = (50.000 x 2) + (25.000 x 2) = 150.000
-```
-
-## Cara Menjalankan Lokal
-
-Cukup buka file `index.html` di browser.
-
-## Cara Deploy ke GitHub Pages
-
-1. Buat repository baru di GitHub.
-2. Upload semua file: `index.html`, `style.css`, `script.js`, dan `README.md`.
-3. Masuk ke menu **Settings** repository.
-4. Pilih **Pages**.
-5. Pada bagian **Build and deployment**, pilih branch `main` dan folder `/root`.
-6. Simpan, lalu buka link GitHub Pages yang muncul.
-
-## Catatan
-
-Aplikasi ini tidak membutuhkan backend dan tidak membutuhkan database. Data barang sementara disimpan di browser menggunakan `localStorage`.
+Setiap push ke branch `apk` menjalankan workflow **Build Android APK**. APK debug dapat diunduh dari artifact bernama **Iron-Teknik-Penawaran-APK** pada workflow run yang berhasil.
